@@ -1,141 +1,130 @@
 from kivy.lang import Builder
+from kivy.uix.boxlayout import BoxLayout
+from kivy.properties import ObjectProperty
+from kivymd.theming import ThemeManager
 from kivymd.app import MDApp
+from kivy.core.window import Window
 
-ScreenHelper = """
+Window.size=(400,700)
+
+KV = '''
+<ContentNavigationDrawer>:
+    BoxLayout:
+        orientation:'vertical'
+        Image:
+            source: 'logo-temp.png'
+        ScrollView:
+            MDList:
+                OneLineListItem:
+                    text: 'Home'                        
+                    on_release:
+                        root.nav_drawer.set_state("close")
+                        root.screen_manager.current = "homepage"
+                                                
+                OneLineListItem:
+                    text: 'Recent Vehicle Searches'                
+                    on_release: 
+                        root.nav_drawer.set_state("close")
+                        root.screen_manager.current = 'recents-page'
+                                                
+                OneLineListItem:
+                    text: 'Settings'                
+                    on_release: 
+                        root.nav_drawer.set_state("close")
+                        root.screen_manager.current = 'settings-page'
+                                                
+                OneLineListItem:
+                    text: 'Help Center'            
+                    on_release: 
+                        root.nav_drawer.set_state("close")
+                        root.screen_manager.current = 'help-page'
 Screen:
-    NavigationLayout:
+    MDToolbar:
+        id: toolbar
+        pos_hint: {"top": 1}
+        elevation: 10
+        title: "vPark"
+        left_action_items: [["menu", lambda x: nav_drawer.set_state("open")]]
+        right_action_items: [["face", lambda x: app.AccountPage()]]
     
+    
+    NavigationLayout:
+        x: toolbar.height
+
         ScreenManager:
             id: screen_manager
-            
             Screen:
-            
                 name: "homepage"
-                
                 BoxLayout:
-                    orientation : 'vertical'
-                    
-                    MDToolbar:
-                        title: 'vPark'
-                        elevation: 10
-                        left_action_items:[["menu",lambda x: root.ids.nav_drawer.toggle_nav_drawer()]]
-                        right_action_items:[["face",lambda x: app.AccountPage()]]
-                    
-
+                    orientation:'vertical'
+                    padding: 60
                     MDLabel:
                         text: 'Homepage'
                         halign: 'center'
-
+                    MDFloatingActionButton:
+                        icon: 'camera'
+                        elevation_normal:12
+                        pos_hint:{"center_x":0.9 }
+                        md_bg_color: app.theme_cls.primary_color
+                        theme_text_color: 'Custom'
+                        text_color: [1,1,1,1]
+                        size: (dp(70),dp(70))
+                        
             Screen:
                 name: "account-page"
                 BoxLayout:
                     orientation : 'vertical'
-                    MDToolbar:
-                        title: 'My Account'
-                        elevation: 10
-                        left_action_items:[["home",lambda x: app.HomePage()]]
                     MDLabel:
                         text: 'Account Page'
                         halign: 'center'
-
+    
             Screen:
                 name: "settings-page"
                 BoxLayout:
                     orientation : 'vertical'
-                    MDToolbar:
-                        title: 'Settings'
-                        elevation: 10
-                        left_action_items:[["home",lambda x: app.HomePage()]]
+                    
                     MDLabel:
                         text: 'Settings Page'
                         halign: 'center'
-
+    
             Screen:
                 name: "recents-page"
                 BoxLayout:
                     orientation : 'vertical'
-                    MDToolbar:
-                        title: 'Recent Searches'
-                        elevation: 10
-                        left_action_items:[["home",lambda x: app.HomePage()]]
                     MDLabel:
                         text: 'Recent Searches'
                         halign: 'center'
-
+    
             Screen:
                 name: "help-page"
                 BoxLayout:
                     orientation : 'vertical'
-                    MDToolbar:
-                        title: 'Help Center'
-                        elevation: 10
-                        left_action_items:[["home",lambda x: app.HomePage()]]
                     MDLabel:
                         text: 'Help Centre'
                         halign: 'center'
-
+    
         MDNavigationDrawer:
             id: nav_drawer
-            
-            BoxLayout:
-                
-                orientation:'vertical'
-                
-                Image:
-                    source: 'logo-temp.png'
-                
-                ScrollView:
-                    
-                    MDList:
-            
-                        OneLineListItem:
-                            text: 'Home'
-                    
-                    
-                        
-                            on_release:
-                                root.ids.nav_drawer.set_state("close")
-                                root.ids.screen_manager.current = "homepage"
-                                            
-                        OneLineListItem:
-                            text: 'Recent Vehicle Searches'
-                            
-                            
-                                
-                            on_release: 
-                                root.ids.nav_drawer.set_state("close")
-                                root.ids.screen_manager.current = 'recents-page'
-                                            
-                        OneLineListItem:
-                            text: 'Settings'
-                            
-                            
-                                
-                            on_release: 
-                                root.ids.nav_drawer.set_state("close")
-                                root.ids.screen_manager.current = 'settings-page'
-                                            
-                        OneLineListItem:
-                            text: 'Help Center'
-                            
-                            
-                                
-                            on_release: 
-                                root.ids.nav_drawer.set_state("close")
-                                root.ids.screen_manager.current = 'help-page'                                    
-"""
+            ContentNavigationDrawer:
+                screen_manager: screen_manager
+                nav_drawer: nav_drawer
+'''
 
 
-class vParkApp(MDApp):
+class ContentNavigationDrawer(BoxLayout):
+    screen_manager = ObjectProperty()
+    nav_drawer = ObjectProperty()
+
+
+class vPark(MDApp):
+
     def build(self):
-        screen = Builder.load_string(ScreenHelper)
-        return screen
-
+        theme_cls = ThemeManager()
+        return Builder.load_string(KV)
     def AccountPage(self):
         self.root.ids.screen_manager.current = 'account-page'
-
     def HomePage(self):
         self.root.ids.screen_manager.current = 'homepage'
 
 
-vParkApp().run()
+vPark().run()
