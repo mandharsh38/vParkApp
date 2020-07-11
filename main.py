@@ -61,11 +61,6 @@ Screen:
                 name: "homepage"
                 BoxLayout:
                     orientation:'vertical'
-                    padding: 60
-                    MDLabel:
-                        text: 'homepage'
-                        halign: 'center'
-                    
                     MDFloatingActionButton:
                         icon: 'camera'
                         elevation_normal:12
