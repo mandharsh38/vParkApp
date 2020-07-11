@@ -141,7 +141,7 @@ class vPark(MDApp):
         cam.export_to_png("IMG.png")
         #img = cv2.imread('image.png')
         #img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-        img = Image.open('logo-temp.png')
+        img = Image.open('IMG.png')
         data = pytesseract.image_to_string(img)
         dia = MDDialog(text=data, size_hint=(0.7, 1), pos_hint={'center_x':0.5,'center_y':0.5})
         dia.open()
