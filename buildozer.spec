@@ -1,13 +1,13 @@
 [app]
 
 # (str) Title of your application
-title = vPark
+title = My Application
 
 # (str) Package name
-package.name = vPark
+package.name = myapp
 
 # (str) Package domain (needed for android/ios packaging)
-package.domain = com.vPark.app
+package.domain = org.test
 
 # (str) Source code where the main.py live
 source.dir = .
@@ -28,7 +28,7 @@ source.include_exts = py,png,jpg,kv,atlas
 #source.exclude_patterns = license,images/*/*.jpg
 
 # (str) Application versioning (method 1)
-version = 0.2
+version = 0.1
 
 # (str) Application versioning (method 2)
 # version.regex = __version__ = ['"](.*)['"]
@@ -36,7 +36,7 @@ version = 0.2
 
 # (list) Application requirements
 # comma separated e.g. requirements = sqlite3,kivy
-requirements = python3,kivy==master,kivymd,SDL2_image==2.0.4
+requirements = python3,kivy,kivymd,Pillow,tesseract
 
 # (str) Custom source folders for requirements
 # Sets custom source for any requirements with recipes
@@ -49,7 +49,7 @@ requirements = python3,kivy==master,kivymd,SDL2_image==2.0.4
 #presplash.filename = %(source.dir)s/data/presplash.png
 
 # (str) Icon of the application
-icon.filename = %(source.dir)s/logo-temp.png
+#icon.filename = %(source.dir)s/data/icon.png
 
 # (str) Supported orientation (one of landscape, sensorLandscape, portrait or all)
 orientation = all
@@ -65,10 +65,10 @@ orientation = all
 # author = © Copyright Info
 
 # change the major version of python used by the app
-osx.python_version = 3.7
+osx.python_version = master
 
 # Kivy version to use
-osx.kivy_version = 1.11.1
+osx.kivy_version = master
 
 #
 # Android specific
@@ -88,10 +88,10 @@ fullscreen = 0
 #android.permissions = INTERNET
 
 # (int) Target Android API, should be as high as possible.
-#android.api = 30
+android.api = 30
 
 # (int) Minimum API your APK will support.
-#android.minapi = 19
+android.minapi = 21
 
 # (int) Android SDK version to use
 #android.sdk = 20
@@ -100,7 +100,7 @@ fullscreen = 0
 #android.ndk = 19b
 
 # (int) Android NDK API to use. This is the minimum API your app will support, it should usually match android.minapi.
-#android.ndk_api = 21
+android.ndk_api = 21
 
 # (bool) Use --private data storage (True) or --dir public storage (False)
 #android.private_storage = True

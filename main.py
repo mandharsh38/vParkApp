@@ -3,9 +3,13 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.properties import ObjectProperty
 from kivymd.theming import ThemeManager
 from kivymd.app import MDApp
-from kivy.core.window import Window
+from kivymd.uix.dialog import MDDialog
+from kivy.uix.camera import Camera
+import pytesseract
+from PIL import Image
 
-Window.size=(400,700)
+# from kivy.core.window import Window
+# Window.size=(400,700)
 
 KV = '''
 <ContentNavigationDrawer>:
@@ -59,8 +63,9 @@ Screen:
                     orientation:'vertical'
                     padding: 60
                     MDLabel:
-                        text: 'Homepage'
+                        text: 'homepage'
                         halign: 'center'
+                    
                     MDFloatingActionButton:
                         icon: 'camera'
                         elevation_normal:12
@@ -69,6 +74,9 @@ Screen:
                         theme_text_color: 'Custom'
                         text_color: [1,1,1,1]
                         size: (dp(70),dp(70))
+                        on_release: 
+                            app.OCR()
+                         
                         
             Screen:
                 name: "account-page"
@@ -121,10 +129,22 @@ class vPark(MDApp):
     def build(self):
         theme_cls = ThemeManager()
         return Builder.load_string(KV)
+
     def AccountPage(self):
         self.root.ids.screen_manager.current = 'account-page'
+
     def HomePage(self):
         self.root.ids.screen_manager.current = 'homepage'
+
+    def OCR(self):
+        cam = Camera()
+        cam.export_to_png("IMG.png")
+        #img = cv2.imread('image.png')
+        #img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+        img = Image.open('logo-temp.png')
+        data = pytesseract.image_to_string(img)
+        dia = MDDialog(text=data, size_hint=(0.7, 1), pos_hint={'center_x':0.5,'center_y':0.5})
+        dia.open()
 
 
 vPark().run()
