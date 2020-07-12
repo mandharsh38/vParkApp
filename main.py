@@ -7,8 +7,6 @@ from kivymd.uix.dialog import MDDialog
 import pytesseract
 from PIL import Image
 
-# from kivy.core.window import Window
-# Window.size=(400,700)
 
 KV = '''
 <ContentNavigationDrawer>:
@@ -58,11 +56,16 @@ Screen:
             id: screen_manager
             Screen:
                 name: "homepage"
-                FloatLayout:
+                BoxLayout:
+                    orientation:'vertical'
                     Camera:
                         id: camera
-                        resolution: (640, 480)
+                        resolution: (3264, 2448)
                         play: True
+                        size: self.size
+                        size_hint: (1,1)
+                        pos_hint : {'center_y':0.5,'center_x':0.5}
+                FloatLayout:
                     MDIconButton:
                         icon: 'camera'
                         text_color: app.theme_cls.primary_color
@@ -85,7 +88,6 @@ Screen:
                 name: "settings-page"
                 BoxLayout:
                     orientation : 'vertical'
-                    
                     MDLabel:
                         text: 'Settings Page'
                         halign: 'center'
