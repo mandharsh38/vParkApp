@@ -4,7 +4,6 @@ from kivy.properties import ObjectProperty
 from kivymd.theming import ThemeManager
 from kivymd.app import MDApp
 from kivymd.uix.dialog import MDDialog
-from kivy.uix.camera import Camera
 import pytesseract
 from PIL import Image
 
@@ -59,19 +58,20 @@ Screen:
             id: screen_manager
             Screen:
                 name: "homepage"
-                BoxLayout:
-                    orientation:'vertical'
-                    MDFloatingActionButton:
+                FloatLayout:
+                    Camera:
+                        id: camera
+                        resolution: (640, 480)
+                        play: True
+                    MDIconButton:
                         icon: 'camera'
-                        elevation_normal:12
-                        pos_hint:{"center_x":0.9 }
-                        md_bg_color: app.theme_cls.primary_color
+                        text_color: app.theme_cls.primary_color
                         theme_text_color: 'Custom'
-                        text_color: [1,1,1,1]
-                        size: (dp(70),dp(70))
-                        on_release: 
+                        user_font_size : '40sp'
+                        pos_hint : {'center_x':.85,'center_y':.08}
+                        on_release:
                             app.OCR()
-                         
+                            
                         
             Screen:
                 name: "account-page"
@@ -111,18 +111,21 @@ Screen:
             ContentNavigationDrawer:
                 screen_manager: screen_manager
                 nav_drawer: nav_drawer
+                camera: camera
 '''
 
 
 class ContentNavigationDrawer(BoxLayout):
     screen_manager = ObjectProperty()
     nav_drawer = ObjectProperty()
+    Camera = ObjectProperty()
 
 
 class vPark(MDApp):
 
     def build(self):
         theme_cls = ThemeManager()
+        theme_cls.theme_style = "Dark"
         return Builder.load_string(KV)
 
     def AccountPage(self):
@@ -132,14 +135,15 @@ class vPark(MDApp):
         self.root.ids.screen_manager.current = 'homepage'
 
     def OCR(self):
-        cam = Camera()
+        cam = self.root.ids['camera']
         cam.export_to_png("IMG.png")
-        #img = cv2.imread('image.png')
-        #img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
         img = Image.open('IMG.png')
         data = pytesseract.image_to_string(img)
-        dia = MDDialog(text=data, size_hint=(0.7, 1), pos_hint={'center_x':0.5,'center_y':0.5})
-        dia.open()
+        self.dialog = MDDialog(text=data,
+                               pos_hint={'center_x': 0.5, 'center_y': 0.5},
+                               size_hint=(0.7, 1)
+                               )
+        self.dialog.open()
 
 
 vPark().run()
