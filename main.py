@@ -3,6 +3,10 @@ from kivy.lang.builder import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivymd.uix.boxlayout import BoxLayout
 from kivy.properties import ObjectProperty
+import pytesseract
+from PIL import Image
+from kivymd.uix.dialog import MDDialog
+from kivy.uix.camera import Camera
 
 screen_helper = """
 <ContentNavigationDrawer>:
@@ -43,22 +47,13 @@ screen_helper = """
         title: "vPark"
         left_action_items: [["menu", lambda x: root.nav_drawer.set_state("open")]]
         right_action_items: [["face", lambda x: app.ShowProfile()]]
-    BoxLayout:
-        orientation:'vertical'
-        Camera:
-            id: camera
-            resolution: (3264, 2448)
-            play: True
-            pos_hint : {'center_y':0.5,'center_x':0.5}
-    FloatLayout:
-        MDIconButton:
-            icon: 'camera'
-            text_color: app.theme_cls.primary_color
-            theme_text_color: 'Custom'
-            user_font_size : '40sp'
-            pos_hint : {'center_x':.85,'center_y':.08}
-            on_release:
-                app.OCR()    
+    MDRectangleFlatButton:
+        text: 'Start Scanning:'
+        pos_hint: {'center_x':.5,'center_y':.5}
+        on_release:
+            app.ShowCamera()
+        
+        
 <ProfileScreen>:
     name: 'profile'
     MDToolbar:
@@ -111,7 +106,23 @@ screen_helper = """
         MDLabel:
             text: 'Settings'
             halign: 'center'
+<CameraScreen>:
+    name: 'camera'
+    FloatLayout:
+        Camera:
+            id: cam
+            resolution: (3264, 2448)
+            size_hint: (1,1)
+            pos_hint : {'center_y':0.5,'center_x':0.5}
         
+        MDIconButton:
+            icon: 'camera'
+            text_color: app.theme_cls.primary_color
+            theme_text_color: 'Custom'
+            user_font_size : '40sp'
+            pos_hint : {'center_x':.85,'center_y':.08}
+            on_release:
+                app.OCR()
         
         
 NavigationLayout:
@@ -127,6 +138,7 @@ NavigationLayout:
             nav_drawer: nav_drawer
         SettingsScreen:
             nav_drawer: nav_drawer
+        CameraScreen:
 
     MDNavigationDrawer:
         id: nav_drawer
@@ -142,7 +154,7 @@ class HomeScreen(Screen):
 
 
 class ProfileScreen(Screen):
-    nav_drawer = ObjectProperty()
+    pass
 
 
 class RecentScreen(Screen):
@@ -157,6 +169,10 @@ class SettingsScreen(Screen):
     pass
 
 
+class CameraScreen(Screen):
+    pass
+
+
 class ContentNavigationDrawer(BoxLayout):
     screen_manager = ObjectProperty()
     nav_drawer = ObjectProperty()
@@ -168,6 +184,7 @@ sm.add_widget(HomeScreen(name='home'))
 sm.add_widget(ProfileScreen(name='profile'))
 sm.add_widget(RecentScreen(name='recent'))
 sm.add_widget(HelpScreen(name='help'))
+sm.add_widget(CameraScreen(name='camera'))
 
 
 class vParkApp(MDApp):
@@ -181,19 +198,20 @@ class vParkApp(MDApp):
     def ShowHome(self):
         self.root.ids.screen_manager.current = 'home'
 
-
+    def ShowCamera(self):
+        self.root.ids.screen_manager.current = 'camera'
 
     def OCR(self):
-        pass
-#        cam = self.root.ids['camera']
-#        cam.export_to_png("IMG.png")
-#        img = Image.open('IMG.png')
-#        data = pytesseract.image_to_string(img)
-#        self.dialog = MDDialog(text=data,
-#                               pos_hint={'center_x': 0.5, 'center_y': 0.5},
-#                               size_hint=(0.7, 1)
-#                               )
-#        self.dialog.open()
+        camera1 = Camera(play = 'True')
+        camera1.export_to_png("IMG.png")
+        img = Image.open('IMG.png')
+        data = pytesseract.image_to_string(img)
+        self.ShowHome()
+        self.dialog = MDDialog(text=data,
+                               pos_hint={'center_x': 0.5, 'center_y': 0.5},
+                               size_hint=(0.7, 1)
+                               )
+        self.dialog.open()
 
 
 vParkApp().run()

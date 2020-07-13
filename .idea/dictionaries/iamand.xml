@@ -2,6 +2,7 @@
   <dictionary name="iamand">
     <words>
       <w>halign</w>
+      <w>pytesseract</w>
     </words>
   </dictionary>
 </component>
