@@ -49,8 +49,6 @@ screen_helper = """
             id: camera
             resolution: (3264, 2448)
             play: True
-            size: self.size
-            size_hint: (1,1)
             pos_hint : {'center_y':0.5,'center_x':0.5}
     FloatLayout:
         MDIconButton:
