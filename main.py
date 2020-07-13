@@ -37,13 +37,14 @@ screen_helper = """
                     
 <HomeScreen>:
     name: "home"
+    MDToolbar:
+        pos_hint: {"top": 1}
+        elevation: 10
+        title: "vPark"
+        left_action_items: [["menu", lambda x: root.nav_drawer.set_state("open")]]
+        right_action_items: [["face", lambda x: app.ShowProfile()]]
     BoxLayout:
         orientation:'vertical'
-        MDToolbar:
-            elevation: 10
-            title: "vPark"
-            left_action_items: [["menu", lambda x: root.nav_drawer.set_state("open")]]
-            right_action_items: [["face", lambda x: app.ShowProfile()]]
         Camera:
             id: camera
             resolution: (3264, 2448)
@@ -62,13 +63,14 @@ screen_helper = """
                 app.OCR()    
 <ProfileScreen>:
     name: 'profile'
+    MDToolbar:
+        pos_hint: {"top": 1}
+        elevation: 10
+        title: "My Profile"
+        left_action_items: [["menu", lambda x: root.nav_drawer.set_state("open")]]
+        right_action_items: [['home', lambda x: app.ShowHome()]]
     BoxLayout:
         orientation: 'vertical'
-        MDToolbar:
-            elevation: 10
-            title: "My Profile"
-            left_action_items: [["menu", lambda x: root.nav_drawer.set_state("open")]]
-            right_action_items: [['home', lambda x: app.ShowHome()]]
         MDLabel:
             text: 'Profile'
             halign: 'center'
@@ -80,9 +82,11 @@ screen_helper = """
         title: "Recent Searches"
         left_action_items: [["menu", lambda x: root.nav_drawer.set_state("open")]]
         right_action_items: [['home', lambda x: app.ShowHome()]]
-    MDLabel:
-        text: 'Recent Searches'
-        halign: 'center'
+    BoxLayout:
+        orientation: 'vertical'
+        MDLabel:
+            text: 'Recent Searches'
+            halign: 'center'
 <HelpScreen>:
     name: 'help'
     MDToolbar:
@@ -91,9 +95,11 @@ screen_helper = """
         title: "Help Centre"
         left_action_items: [["menu", lambda x: root.nav_drawer.set_state("open")]]
         right_action_items: [['home', lambda x: app.ShowHome()]]
-    MDLabel:
-        text: 'Help Centre'
-        halign: 'center'
+    BoxLayout:
+        orientation: 'vertical'
+        MDLabel:
+            text: 'Help Centre'
+            halign: 'center'
 <SettingsScreen>:
     name:'settings'
     MDToolbar:
@@ -102,9 +108,11 @@ screen_helper = """
         title: "Settings"
         left_action_items: [["menu", lambda x: root.nav_drawer.set_state("open")]]
         right_action_items: [['home', lambda x: app.ShowHome()]]
-    MDLabel:
-        text: 'Settings'
-        halign: 'center'
+    BoxLayout:
+        orientation: 'vertical'
+        MDLabel:
+            text: 'Settings'
+            halign: 'center'
         
         
         
