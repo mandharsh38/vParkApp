@@ -1,13 +1,12 @@
 from kivymd.app import MDApp
 from kivy.lang.builder import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
-from kivymd.uix.boxlayout import BoxLayout
+from kivymd.uix.boxlayout import MDBoxLayout
 from kivy.properties import ObjectProperty
 import pytesseract
 from PIL import Image
 from kivymd.uix.dialog import MDDialog
-from kivy.uix.camera import Camera
-
+# Builder string:
 screen_helper = """
 <ContentNavigationDrawer>:
     orientation:'vertical'
@@ -20,7 +19,6 @@ screen_helper = """
                 on_release:
                     root.nav_drawer.set_state("close")
                     root.screen_manager.current = "home"
-                                                    
             OneLineListItem:
                 text: 'Recent Vehicle Searches'                
                 on_release: 
@@ -35,10 +33,7 @@ screen_helper = """
                 text: 'Help Center'
                 on_release:
                     root.nav_drawer.set_state("close")
-                    root.screen_manager.current = 'help'
-                    
-                    
-                    
+                    root.screen_manager.current = 'help'                    
 <HomeScreen>:
     name: "home"
     MDToolbar:
@@ -47,7 +42,7 @@ screen_helper = """
         title: "vPark"
         left_action_items: [["menu", lambda x: root.nav_drawer.set_state("open")]]
         right_action_items: [["face", lambda x: app.ShowProfile()]]
-    BoxLayout:
+    MDBoxLayout:
         orientation: 'vertical'
         MDLabel:
             text: 'Homepage'
@@ -65,7 +60,7 @@ screen_helper = """
         title: "My Profile"
         left_action_items: [["menu", lambda x: root.nav_drawer.set_state("open")]]
         right_action_items: [['home', lambda x: app.ShowHome()]]
-    BoxLayout:
+    MDBoxLayout:
         orientation: 'vertical'
         MDLabel:
             text: 'Profile'
@@ -78,7 +73,7 @@ screen_helper = """
         title: "Recent Searches"
         left_action_items: [["menu", lambda x: root.nav_drawer.set_state("open")]]
         right_action_items: [['home', lambda x: app.ShowHome()]]
-    BoxLayout:
+    MDBoxLayout:
         orientation: 'vertical'
         MDLabel:
             text: 'Recent Searches'
@@ -91,7 +86,7 @@ screen_helper = """
         title: "Help Centre"
         left_action_items: [["menu", lambda x: root.nav_drawer.set_state("open")]]
         right_action_items: [['home', lambda x: app.ShowHome()]]
-    BoxLayout:
+    MDBoxLayout:
         orientation: 'vertical'
         MDLabel:
             text: 'Help Centre'
@@ -104,30 +99,11 @@ screen_helper = """
         title: "Settings"
         left_action_items: [["menu", lambda x: root.nav_drawer.set_state("open")]]
         right_action_items: [['home', lambda x: app.ShowHome()]]
-    BoxLayout:
+    MDBoxLayout:
         orientation: 'vertical'
         MDLabel:
             text: 'Settings'
             halign: 'center'
-<CameraScreen>:
-    name: 'camera'
-    FloatLayout:
-        Camera:
-            id: cam
-            resolution: (3264, 2448)
-            size_hint: (1,1)
-            pos_hint : {'center_y':0.5,'center_x':0.5}
-        
-        MDIconButton:
-            icon: 'camera'
-            text_color: app.theme_cls.primary_color
-            theme_text_color: 'Custom'
-            user_font_size : '40sp'
-            pos_hint : {'center_x':.85,'center_y':.08}
-            on_release:
-                app.OCR()
-        
-        
 NavigationLayout:
     ScreenManager:
         id: screen_manager
@@ -141,14 +117,27 @@ NavigationLayout:
             nav_drawer: nav_drawer
         SettingsScreen:
             nav_drawer: nav_drawer
-        CameraScreen:
-
+        Screen:
+            name: 'camera'
+            FloatLayout:
+                Camera:
+                    id: cam
+                    resolution: (3264, 2448)
+                    size_hint: (1,1)
+                    pos_hint : {'center_y':0.5,'center_x':0.5}
+                MDIconButton:
+                    icon: 'camera'
+                    text_color: app.theme_cls.primary_color
+                    theme_text_color: 'Custom'
+                    user_font_size : '40sp'
+                    pos_hint : {'center_x':.85,'center_y':.08}
+                    on_release:
+                        app.OCR()
     MDNavigationDrawer:
         id: nav_drawer
         ContentNavigationDrawer:
             screen_manager: screen_manager
             nav_drawer: nav_drawer
-
 """
 
 
@@ -172,11 +161,7 @@ class SettingsScreen(Screen):
     pass
 
 
-class CameraScreen(Screen):
-    pass
-
-
-class ContentNavigationDrawer(BoxLayout):
+class ContentNavigationDrawer(MDBoxLayout):
     screen_manager = ObjectProperty()
     nav_drawer = ObjectProperty()
 
@@ -187,14 +172,15 @@ sm.add_widget(HomeScreen(name='home'))
 sm.add_widget(ProfileScreen(name='profile'))
 sm.add_widget(RecentScreen(name='recent'))
 sm.add_widget(HelpScreen(name='help'))
-sm.add_widget(CameraScreen(name='camera'))
 
-
+# Main function:
 class vParkApp(MDApp):
+
     def build(self):
         screen = Builder.load_string(screen_helper)
         return screen
 
+    # Functions to change screens:
     def ShowProfile(self):
         self.root.ids.screen_manager.current = 'profile'
 
@@ -204,12 +190,19 @@ class vParkApp(MDApp):
     def ShowCamera(self):
         self.root.ids.screen_manager.current = 'camera'
 
+    # Function for OCR (bare for now, needs optimisations, work on it after successful apk build)
     def OCR(self):
-        camera1 = Camera(play = 'True')
+        # create a camera variable
+        camera1 = self.root.ids['cam']
+        # capture a shot and export to png
         camera1.export_to_png("IMG.png")
+        # open image in PIL(basically storing image in a variable)
         img = Image.open('IMG.png')
+        # OCR using pytesseract stored in a variable named 'data'
         data = pytesseract.image_to_string(img)
+        # Back to HomeScreen
         self.ShowHome()
+        # Create a dialog to show the 'data' on screen and open the dialog
         self.dialog = MDDialog(text=data,
                                pos_hint={'center_x': 0.5, 'center_y': 0.5},
                                size_hint=(0.7, 1)
