@@ -47,13 +47,16 @@ screen_helper = """
         title: "vPark"
         left_action_items: [["menu", lambda x: root.nav_drawer.set_state("open")]]
         right_action_items: [["face", lambda x: app.ShowProfile()]]
-    MDRectangleFlatButton:
-        text: 'Start Scanning:'
-        pos_hint: {'center_x':.5,'center_y':.5}
-        on_release:
-            app.ShowCamera()
-        
-        
+    BoxLayout:
+        orientation: 'vertical'
+        MDLabel:
+            text: 'Homepage'
+            halign: 'center'
+        MDRectangleFlatButton:
+            text: 'Start Scanning:'
+            pos_hint: {'center_x':.5,'center_y':.3}
+            on_release:
+                app.ShowCamera()
 <ProfileScreen>:
     name: 'profile'
     MDToolbar:
