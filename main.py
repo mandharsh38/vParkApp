@@ -6,6 +6,12 @@ from kivy.properties import ObjectProperty
 import pytesseract
 from PIL import Image
 from kivymd.uix.dialog import MDDialog
+#permissions for camera and storage
+#plz comment these two lines to compile on desktop
+#only for apk development:
+from android.permissions import request_permissions, Permission
+request_permissions([Permission.CAMERA,Permission.WRITE_EXTERNAL_STORAGE,Permission.READ_EXTERNAL_STORAGE])
+
 # Builder string:
 screen_helper = """
 <ContentNavigationDrawer>:
