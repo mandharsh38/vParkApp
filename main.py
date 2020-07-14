@@ -122,7 +122,7 @@ NavigationLayout:
             FloatLayout:
                 Camera:
                     id: cam
-                    resolution: (3264, 2448)
+                    
                     size_hint: (1,1)
                     pos_hint : {'center_y':0.5,'center_x':0.5}
                 MDIconButton:
@@ -197,9 +197,8 @@ class vParkApp(MDApp):
         # capture a shot and export to png
         camera1.export_to_png("IMG.png")
         # open image in PIL(basically storing image in a variable)
-        img = Image.open('IMG.png')
         # OCR using pytesseract stored in a variable named 'data'
-        data = pytesseract.image_to_string(img)
+        data = pytesseract.image_to_string(Image.open('IMG.png'))
         # Back to HomeScreen
         self.ShowHome()
         # Create a dialog to show the 'data' on screen and open the dialog
