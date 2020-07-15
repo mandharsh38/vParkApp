@@ -9,8 +9,8 @@ from kivymd.uix.dialog import MDDialog
 #permissions for camera and storage
 #plz comment these two lines to compile on desktop
 #only for apk development:
-from android.permissions import request_permissions, Permission
-request_permissions([Permission.CAMERA,Permission.WRITE_EXTERNAL_STORAGE,Permission.READ_EXTERNAL_STORAGE])
+#from android.permissions import request_permissions, Permission
+#request_permissions([Permission.CAMERA,Permission.WRITE_EXTERNAL_STORAGE,Permission.READ_EXTERNAL_STORAGE])
 
 # Builder string:
 screen_helper = """
@@ -128,9 +128,9 @@ NavigationLayout:
             FloatLayout:
                 Camera:
                     id: cam
-                    
-                    size_hint: (1,1)
+                    resolution: (1920,1080)
                     pos_hint : {'center_y':0.5,'center_x':0.5}
+                    allow_stretch: True
                 MDIconButton:
                     icon: 'camera'
                     text_color: app.theme_cls.primary_color
