@@ -205,8 +205,6 @@ class vParkApp(MDApp):
         # open image in PIL(basically storing image in a variable)
         # OCR using pytesseract stored in a variable named 'data'
         data = pytesseract.image_to_string(Image.open('IMG.png'))
-        # Back to HomeScreen
-        self.ShowHome()
         # Create a dialog to show the 'data' on screen and open the dialog
         self.dialog = MDDialog(text=data,
                                pos_hint={'center_x': 0.5, 'center_y': 0.5},
