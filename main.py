@@ -1,7 +1,7 @@
 from kivymd.app import MDApp
 from kivy.lang.builder import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
-from kivymd.uix.boxlayout import MDBoxLayout
+from kivymd.uix.boxlayout import BoxLayout
 from kivy.properties import ObjectProperty
 import pytesseract
 from PIL import Image
@@ -9,8 +9,8 @@ from kivymd.uix.dialog import MDDialog
 #permissions for camera and storage
 #plz comment these two lines to compile on desktop
 #only for apk development:
-from android.permissions import request_permissions, Permission
-request_permissions([Permission.CAMERA,Permission.WRITE_EXTERNAL_STORAGE,Permission.READ_EXTERNAL_STORAGE])
+#from android.permissions import request_permissions, Permission
+#request_permissions([Permission.CAMERA,Permission.WRITE_EXTERNAL_STORAGE,Permission.READ_EXTERNAL_STORAGE])
 
 # Builder string:
 screen_helper = """
@@ -48,7 +48,7 @@ screen_helper = """
         title: "vPark"
         left_action_items: [["menu", lambda x: root.nav_drawer.set_state("open")]]
         right_action_items: [["face", lambda x: app.ShowProfile()]]
-    MDBoxLayout:
+    BoxLayout:
         orientation: 'vertical'
         MDLabel:
             text: 'Homepage'
@@ -66,7 +66,7 @@ screen_helper = """
         title: "My Profile"
         left_action_items: [["menu", lambda x: root.nav_drawer.set_state("open")]]
         right_action_items: [['home', lambda x: app.ShowHome()]]
-    MDBoxLayout:
+    BoxLayout:
         orientation: 'vertical'
         MDLabel:
             text: 'Profile'
@@ -79,7 +79,7 @@ screen_helper = """
         title: "Recent Searches"
         left_action_items: [["menu", lambda x: root.nav_drawer.set_state("open")]]
         right_action_items: [['home', lambda x: app.ShowHome()]]
-    MDBoxLayout:
+    BoxLayout:
         orientation: 'vertical'
         MDLabel:
             text: 'Recent Searches'
@@ -92,7 +92,7 @@ screen_helper = """
         title: "Help Centre"
         left_action_items: [["menu", lambda x: root.nav_drawer.set_state("open")]]
         right_action_items: [['home', lambda x: app.ShowHome()]]
-    MDBoxLayout:
+    BoxLayout:
         orientation: 'vertical'
         MDLabel:
             text: 'Help Centre'
@@ -105,7 +105,7 @@ screen_helper = """
         title: "Settings"
         left_action_items: [["menu", lambda x: root.nav_drawer.set_state("open")]]
         right_action_items: [['home', lambda x: app.ShowHome()]]
-    MDBoxLayout:
+    BoxLayout:
         orientation: 'vertical'
         MDLabel:
             text: 'Settings'
@@ -167,7 +167,7 @@ class SettingsScreen(Screen):
     pass
 
 
-class ContentNavigationDrawer(MDBoxLayout):
+class ContentNavigationDrawer(BoxLayout):
     screen_manager = ObjectProperty()
     nav_drawer = ObjectProperty()
 
