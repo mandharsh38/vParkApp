@@ -6,11 +6,12 @@ from kivy.properties import ObjectProperty
 import pytesseract
 from PIL import Image
 from kivymd.uix.dialog import MDDialog
-#permissions for camera and storage
-#plz comment these two lines to compile on desktop
-#only for apk development:
-#from android.permissions import request_permissions, Permission
-#request_permissions([Permission.CAMERA,Permission.WRITE_EXTERNAL_STORAGE,Permission.READ_EXTERNAL_STORAGE])
+
+# permissions for camera and storage
+# plz comment these two lines to compile on desktop
+# only for apk development:
+# from android.permissions import request_permissions, Permission
+# request_permissions([Permission.CAMERA,Permission.WRITE_EXTERNAL_STORAGE,Permission.READ_EXTERNAL_STORAGE])
 
 # Builder string:
 screen_helper = """
@@ -126,6 +127,12 @@ NavigationLayout:
         Screen:
             name: 'camera'
             FloatLayout:
+                MDToolbar:
+                    pos_hint: {"top": 1}
+                    elevation: 10
+                    title: "Camera"
+                    left_action_items: [["menu", lambda x: root.ids.nav_drawer.set_state("open")]]
+                    right_action_items: [['home', lambda x: app.ShowHome()]]
                 Camera:
                     id: cam
                     resolution: (1920,1080)
@@ -179,6 +186,7 @@ sm.add_widget(ProfileScreen(name='profile'))
 sm.add_widget(RecentScreen(name='recent'))
 sm.add_widget(HelpScreen(name='help'))
 
+
 # Main function:
 class vParkApp(MDApp):
 
@@ -203,9 +211,11 @@ class vParkApp(MDApp):
         # capture a shot and export to png
         camera1.export_to_png("IMG.png")
         # open image in PIL(basically storing image in a variable)
+        img = Image.open('IMG.png')
         # OCR using pytesseract stored in a variable named 'data'
-        data = pytesseract.image_to_string(Image.open('IMG.png'))
+        data = pytesseract.image_to_string(img)
         # Create a dialog to show the 'data' on screen and open the dialog
+        self.ShowHome()
         self.dialog = MDDialog(text=data,
                                pos_hint={'center_x': 0.5, 'center_y': 0.5},
                                size_hint=(0.7, 1)
