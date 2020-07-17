@@ -111,6 +111,22 @@ screen_helper = """
         MDLabel:
             text: 'Settings'
             halign: 'center'
+<ManualEntryScreen>:
+    name: 'MEScreen'
+    BoxLayout:
+        orientation: 'vertical'
+        MDLabel:
+            text: 'abc'
+        BoxLayout:
+            pos_hint:{'center_x':.9}
+            spacing: 30
+            padding: 30
+            MDFlatButton:
+                text: 'Cancel'
+                on_release: app.ShowCamera()
+            MDRaisedButton:
+                text: 'Done'
+                on_release: app.ManualEntry()
 NavigationLayout:
     ScreenManager:
         id: screen_manager
@@ -124,6 +140,7 @@ NavigationLayout:
             nav_drawer: nav_drawer
         SettingsScreen:
             nav_drawer: nav_drawer
+        ManualEntryScreen:
         Screen:
             name: 'camera'
             FloatLayout:
@@ -146,6 +163,11 @@ NavigationLayout:
                     pos_hint : {'center_x':.85,'center_y':.08}
                     on_release:
                         app.OCR()
+                MDRaisedButton:
+                    text: 'Enter Manually'
+                    md_bg_color: app.theme_cls.primary_color
+                    pos_hint: {'center_x':0.4,'center_y':0.078}
+                    on_release: app.ShowManualEntryScreen()
     MDNavigationDrawer:
         id: nav_drawer
         ContentNavigationDrawer:
@@ -174,6 +196,10 @@ class SettingsScreen(Screen):
     pass
 
 
+class ManualEntryScreen(Screen):
+    pass
+
+
 class ContentNavigationDrawer(BoxLayout):
     screen_manager = ObjectProperty()
     nav_drawer = ObjectProperty()
@@ -185,6 +211,7 @@ sm.add_widget(HomeScreen(name='home'))
 sm.add_widget(ProfileScreen(name='profile'))
 sm.add_widget(RecentScreen(name='recent'))
 sm.add_widget(HelpScreen(name='help'))
+sm.add_widget(ManualEntryScreen(name='MEScreen'))
 
 
 # Main function:
@@ -204,6 +231,9 @@ class vParkApp(MDApp):
     def ShowCamera(self):
         self.root.ids.screen_manager.current = 'camera'
 
+    def ShowManualEntryScreen(self):
+        self.root.ids.screen_manager.current = 'MEScreen'
+
     # Function for OCR (bare for now, needs optimisations, work on it after successful apk build)
     def OCR(self):
         # create a camera variable
@@ -221,6 +251,10 @@ class vParkApp(MDApp):
                                size_hint=(0.7, 1)
                                )
         self.dialog.open()
+
+    # Manual entry function:
+    def ManualEntry(self):
+        pass
 
 
 vParkApp().run()
