@@ -40,7 +40,12 @@ screen_helper = """
                 text: 'Help Center'
                 on_release:
                     root.nav_drawer.set_state("close")
-                    root.screen_manager.current = 'help'                    
+                    root.screen_manager.current = 'help'
+            OneLineListItem:
+                text: 'Lost Vehicle'                
+                on_release: 
+                    root.nav_drawer.set_state("close")
+                    root.screen_manager.current = 'LostVehicle'
 <HomeScreen>:
     name: "home"
     MDToolbar:
@@ -127,6 +132,20 @@ screen_helper = """
             MDRaisedButton:
                 text: 'Done'
                 on_release: app.ManualEntry()
+<LostVehicleScreen>:
+    name: 'LostVehicle'
+    MDToolbar:
+        pos_hint: {"top": 1}
+        elevation: 10
+        title: "Lost Vehicle"
+        left_action_items: [["menu", lambda x: root.nav_drawer.set_state("open")]]
+        right_action_items: [['home', lambda x: app.ShowHome()]]
+    BoxLayout:
+        orientation: 'vertical'
+        MDLabel:
+            text: 'Canvas for Karan ;-)'
+            halign: 'center'
+        
 NavigationLayout:
     ScreenManager:
         id: screen_manager
@@ -139,6 +158,8 @@ NavigationLayout:
         HelpScreen:
             nav_drawer: nav_drawer
         SettingsScreen:
+            nav_drawer: nav_drawer
+        LostVehicleScreen:
             nav_drawer: nav_drawer
         ManualEntryScreen:
         Screen:
@@ -200,6 +221,10 @@ class ManualEntryScreen(Screen):
     pass
 
 
+class LostVehicleScreen(Screen):
+    pass
+
+
 class ContentNavigationDrawer(BoxLayout):
     screen_manager = ObjectProperty()
     nav_drawer = ObjectProperty()
@@ -212,6 +237,7 @@ sm.add_widget(ProfileScreen(name='profile'))
 sm.add_widget(RecentScreen(name='recent'))
 sm.add_widget(HelpScreen(name='help'))
 sm.add_widget(ManualEntryScreen(name='MEScreen'))
+sm.add_widget(ManualEntryScreen(name='LostVehicle'))
 
 
 # Main function:
