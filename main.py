@@ -54,14 +54,23 @@ screen_helper = """
         title: "vPark"
         left_action_items: [["menu", lambda x: root.nav_drawer.set_state("open")]]
         right_action_items: [["face", lambda x: app.ShowProfile()]]
-    BoxLayout:
-        orientation: 'vertical'
+    FloatLayout:
+        Camera:
+            resolution: (100,120)
+            size: self.size
+            allow_stretch: True
+    GridLayout:
+        cols: 2
         MDLabel:
-            text: 'Homepage'
-            halign: 'center'
-        MDRectangleFlatButton:
-            text: 'Start Scanning:'
-            pos_hint: {'center_x':.5,'center_y':.3}
+            text: 'Insurance Due:'
+        MDLabel:
+            text: 'Pollution Due:'
+        MDLabel:
+            text: 'DDMMYYYY'
+        MDLabel:
+            text: 'DDMMYYYY'
+        MDRaisedButton:
+            text: 'Start Scanning'
             on_release:
                 app.ShowCamera()
 <ProfileScreen>:
@@ -145,7 +154,10 @@ screen_helper = """
         MDLabel:
             text: 'Canvas for Karan ;-)'
             halign: 'center'
-        
+<ShowINfoScreen>:
+    name: 'InfoScreen'
+    MDLabel:
+        text: 'Info'
 NavigationLayout:
     ScreenManager:
         id: screen_manager
@@ -162,6 +174,8 @@ NavigationLayout:
         LostVehicleScreen:
             nav_drawer: nav_drawer
         ManualEntryScreen:
+        ShowInfoScreen:
+            
         Screen:
             name: 'camera'
             FloatLayout:
@@ -225,6 +239,10 @@ class LostVehicleScreen(Screen):
     pass
 
 
+class ShowInfoScreen(Screen):
+    pass
+
+
 class ContentNavigationDrawer(BoxLayout):
     screen_manager = ObjectProperty()
     nav_drawer = ObjectProperty()
@@ -238,6 +256,7 @@ sm.add_widget(RecentScreen(name='recent'))
 sm.add_widget(HelpScreen(name='help'))
 sm.add_widget(ManualEntryScreen(name='MEScreen'))
 sm.add_widget(ManualEntryScreen(name='LostVehicle'))
+sm.add_widget(ShowInfoScreen(name='InfoScreen'))
 
 
 # Main function:
@@ -260,6 +279,9 @@ class vParkApp(MDApp):
     def ShowManualEntryScreen(self):
         self.root.ids.screen_manager.current = 'MEScreen'
 
+    def ShowInfo(self):
+        self.root.ids.screen_manager.current = 'InfoScreen'
+
     # Function for OCR (bare for now, needs optimisations, work on it after successful apk build)
     def OCR(self):
         # create a camera variable
@@ -271,12 +293,7 @@ class vParkApp(MDApp):
         # OCR using pytesseract stored in a variable named 'data'
         data = pytesseract.image_to_string(img)
         # Create a dialog to show the 'data' on screen and open the dialog
-        self.ShowHome()
-        self.dialog = MDDialog(text=data,
-                               pos_hint={'center_x': 0.5, 'center_y': 0.5},
-                               size_hint=(0.7, 1)
-                               )
-        self.dialog.open()
+        self.ShowInfo(data)
 
     # Manual entry function:
     def ManualEntry(self):
