@@ -5,7 +5,16 @@ from kivymd.uix.boxlayout import BoxLayout
 from kivy.properties import ObjectProperty
 import pytesseract
 from PIL import Image
-from kivymd.uix.dialog import MDDialog
+from kivymd.uix.datatables import MDDataTable
+from kivy.metrics import dp
+from kivy.core.window import Window
+from kivy.uix.popup import Popup
+from kivy.uix.label import Label
+from database import DataBase
+from kivymd.toast import toast
+from kivymd.uix.bottomsheet import MDGridBottomSheet
+
+Window.size = (300, 500)
 
 # permissions for camera and storage
 # plz comment these two lines to compile on desktop
@@ -15,6 +24,143 @@ from kivymd.uix.dialog import MDDialog
 
 # Builder string:
 screen_helper = """
+<LoginScreen>:
+    name: "login"
+
+    email: email
+    password: password
+
+    FloatLayout:
+        Label:
+            text: "Login"
+            font_size: 20
+            color: 0, 0, 0, 1
+            size_hint: 0.8, 0.2
+            pos_hint: {"x":0.1, "top":1}
+
+        Label:
+            text:"Email: "
+            color: 0, 0, 0, 1
+            font_size: (root.width**2 + root.height**2) / 13**4
+            pos_hint: {"x":0.1, "top":0.9}
+            size_hint: 0.35, 0.15
+
+        MDTextField:
+            id: email
+            pos_hint: {"x": 0.45 , "top":0.85}
+            size_hint: (0.7,1)
+
+        Label:
+            text:"Password: "
+            color: 0, 0, 0, 1
+            font_size: (root.width**2 + root.height**2) / 13**4
+            pos_hint: {"x":0.1, "top":0.7}
+            size_hint: 0.35, 0.15
+
+        TextInput:
+            id: password
+            font_size: (root.width**2 + root.height**2) / 13**4
+            multiline: False
+            password: True
+            pos_hint: {"x": 0.45, "top":0.65}
+            size_hint: 0.4, 0.05
+
+        Button:
+            pos_hint:{"x":0.35,"y":0.25}
+            size_hint: 0.3, 0.1
+            font_size: (root.width**2 + root.height**2) / 13**4
+            text: "Login"
+            on_release:
+                root.manager.transition.direction = "up"
+                root.manager.current = "home"
+                root.loginBtn()
+
+        Button:
+            pos_hint:{"x":0.15,"y":0.4}
+            size_hint: 0.7, 0.1
+            font_size: (root.width**2 + root.height**2) / 13**4
+            text: "Don't have an Account? Create One"
+            on_release:
+                root.manager.transition.direction = "right"
+                root.manager.current = "create"
+                root.createBtn()
+<CreateAccountScreen>:
+    name: "create"
+
+    namee: namee
+    email: email
+    password: passw
+
+    FloatLayout:
+        cols:1
+
+        FloatLayout:
+            size: root.width, root.height/2
+
+            Label:
+                text: "Create an Account"
+                color: 0, 0, 0, 1
+                size_hint: 0.8, 0.2
+                pos_hint: {"x":0.1, "top":1}
+    
+            Label:
+                size_hint: 0.5,0.12
+                color: 0, 0, 0, 1
+                pos_hint: {"x":0, "top":0.8}
+                text: "Name: "
+
+            TextInput:
+                pos_hint: {"x":0.5, "top":0.8}
+                size_hint: 0.45, 0.1
+                id: namee
+                multiline: False
+                font_size: 13
+
+            Label:
+                size_hint: 0.5,0.12
+                color: 0, 0, 0, 1
+                pos_hint: {"x":0, "top":0.8-0.13}
+                text: "Email: "
+
+            TextInput:
+                pos_hint: {"x":0.5, "top":0.8-0.13}
+                size_hint: 0.45, 0.1
+                id: email
+                multiline: False
+                font_size: 13
+
+            Label:
+                size_hint: 0.5,0.12
+                color: 0, 0, 0, 1
+                pos_hint: {"x":0, "top":0.8-0.13*2}
+                text: "Password: "
+
+            TextInput:
+                pos_hint: {"x":0.5, "top":0.8-0.13*2}
+                size_hint: 0.45, 0.1
+                id: passw
+                multiline: False
+                password: True
+                font_size: 13
+
+        Button:
+            pos_hint:{"x":0.1,"y":0.25}
+            size_hint: 0.8, 0.1
+            font_size: 15
+            text: "Already have an Account? Log In"
+            on_release:
+                root.manager.transition.direction = "left"
+                root.manager.current = "login"
+                root.login()
+
+        Button:
+            pos_hint:{"x":0.2,"y":0.05}
+            size_hint: 0.6, 0.15
+            text: "Submit"
+            on_release:
+                root.manager.transition.direction = "left"
+                root.manager.current = "login"
+                root.submit()
 <ContentNavigationDrawer>:
     orientation:'vertical'
     Image:
@@ -27,10 +173,20 @@ screen_helper = """
                     root.nav_drawer.set_state("close")
                     root.screen_manager.current = "home"
             OneLineListItem:
+                text: 'Lost Vehicle'                
+                on_release: 
+                    root.nav_drawer.set_state("close")
+                    root.screen_manager.current = 'LostVehicle'
+            OneLineListItem:
                 text: 'Recent Vehicle Searches'                
                 on_release: 
                     root.nav_drawer.set_state("close")
                     root.screen_manager.current = 'recent'
+            OneLineListItem:
+                text: 'My Profile'                        
+                on_release:
+                    root.nav_drawer.set_state("close")
+                    root.screen_manager.current = "profile"
             OneLineListItem:
                 text: 'Settings'                
                 on_release: 
@@ -41,11 +197,6 @@ screen_helper = """
                 on_release:
                     root.nav_drawer.set_state("close")
                     root.screen_manager.current = 'help'
-            OneLineListItem:
-                text: 'Lost Vehicle'                
-                on_release: 
-                    root.nav_drawer.set_state("close")
-                    root.screen_manager.current = 'LostVehicle'
 <HomeScreen>:
     name: "home"
     MDToolbar:
@@ -54,13 +205,26 @@ screen_helper = """
         title: "vPark"
         left_action_items: [["menu", lambda x: root.nav_drawer.set_state("open")]]
         right_action_items: [["face", lambda x: app.ShowProfile()]]
+        MDRaisedButton:
+            text: 'Alert'
+            background_color: 17/255.0, 60/255.0, 216/255.0, 1
+            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+            on_release: app.open_table()
     FloatLayout:
         Camera:
-            resolution: (100,120)
-            size: self.size
-            allow_stretch: True
+            resolution: (120,60)
+            play: 'True'
+            allow_stretch: 'True'
+        MDRaisedButton:
+            text: 'Start Scanning'
+            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+            on_release:
+                app.ShowCamera()
     GridLayout:
         cols: 2
+        row_default_height: '48dp'
+        row_force_default: True
+        pos_hint: {'center_x': 0.6, 'center_y': -0.3}
         MDLabel:
             text: 'Insurance Due:'
         MDLabel:
@@ -69,23 +233,47 @@ screen_helper = """
             text: 'DDMMYYYY'
         MDLabel:
             text: 'DDMMYYYY'
-        MDRaisedButton:
-            text: 'Start Scanning'
-            on_release:
-                app.ShowCamera()
 <ProfileScreen>:
     name: 'profile'
+    n: n
+    email: email
+    created:created
     MDToolbar:
         pos_hint: {"top": 1}
         elevation: 10
         title: "My Profile"
         left_action_items: [["menu", lambda x: root.nav_drawer.set_state("open")]]
         right_action_items: [['home', lambda x: app.ShowHome()]]
-    BoxLayout:
-        orientation: 'vertical'
-        MDLabel:
-            text: 'Profile'
-            halign: 'center'
+
+    FloatLayout:
+        Label:
+            id: n
+            pos_hint:{"x": 0.1, "top":0.9}
+            size_hint:0.8, 0.2
+            text: "Account Name: "
+            color: 0, 0, 0, 1
+
+        Label:
+            id: email
+            pos_hint:{"x": 0.1, "top":0.7}
+            size_hint:0.8, 0.2
+            text: "Email: "
+            color: 0, 0, 0, 1
+
+        Label:
+            id: created
+            pos_hint:{"x": 0.1, "top":0.5}
+            size_hint:0.8, 0.2
+            text: "Created: "
+            color: 0, 0, 0, 1
+
+        MDRaisedButton:
+            pos_hint:{"x":0.25, "y": 0.1}
+            size_hint:0.5,0.1
+            text: "Log Out"
+            on_release:
+                root.manager.current = "login"
+                root.manager.transition.direction = "down"
 <RecentScreen>:
     name: 'recent'
     MDToolbar:
@@ -127,12 +315,61 @@ screen_helper = """
             halign: 'center'
 <ManualEntryScreen>:
     name: 'MEScreen'
-    BoxLayout:
+    FloatLayout:
+        padding: 50
         orientation: 'vertical'
-        MDLabel:
-            text: 'abc'
+        Spinner:
+            text: '..'
+            values: '..','A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'
+            size_hint: (0.1, 0.05)
+            pos_hint: {'center_x': 0.05, 'center_y': 0.5}
+        Spinner:
+            text: '..'
+            values: '..','A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'
+            size_hint: (0.1, 0.05)
+            pos_hint: {'center_x': 0.15, 'center_y': 0.5}
+        Spinner:
+            text: '..'
+            values: '..','0', '1', '2', '3', '4', '5', '6', '7', '8', '9'
+            size_hint: (0.1, 0.05)
+            pos_hint: {'center_x': 0.25, 'center_y': 0.5}
+        Spinner:
+            text: '..'
+            values: '..','0', '1', '2', '3', '4', '5', '6', '7', '8', '9'
+            size_hint: (0.1, 0.05)
+            pos_hint: {'center_x': 0.35, 'center_y': 0.5}
+        Spinner:
+            text: '..'
+            values: '..','A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'
+            size_hint: (0.1, 0.05)
+            pos_hint: {'center_x': 0.45, 'center_y': 0.5}
+        Spinner:
+            text: '..'
+            values: '..','A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'
+            size_hint: (0.1, 0.05)
+            pos_hint: {'center_x': 0.55, 'center_y': 0.5}
+        Spinner:
+            text: '..'
+            values: '..','0', '1', '2', '3', '4', '5', '6', '7', '8', '9'
+            size_hint: (0.1, 0.05)
+            pos_hint: {'center_x': 0.65, 'center_y': 0.5}
+        Spinner:
+            text: '..'
+            values: '..','0', '1', '2', '3', '4', '5', '6', '7', '8', '9'
+            size_hint: (0.1, 0.05)
+            pos_hint: {'center_x': 0.75, 'center_y': 0.5}
+        Spinner:
+            text: '..'
+            values: '..','0', '1', '2', '3', '4', '5', '6', '7', '8', '9'
+            size_hint: (0.1, 0.05)
+            pos_hint: {'center_x': 0.85, 'center_y': 0.5}
+        Spinner:
+            text: '..'
+            values: '..','0', '1', '2', '3', '4', '5', '6', '7', '8', '9'
+            size_hint: (0.1, 0.05)
+            pos_hint: {'center_x': 0.95, 'center_y': 0.5}
         BoxLayout:
-            pos_hint:{'center_x':.9}
+            pos_hint:{'center_x':.5}
             spacing: 30
             padding: 30
             MDFlatButton:
@@ -140,7 +377,8 @@ screen_helper = """
                 on_release: app.ShowCamera()
             MDRaisedButton:
                 text: 'Done'
-                on_release: app.ManualEntry()
+                on_release:
+                    root.manager.current = "InfoScreen"
 <LostVehicleScreen>:
     name: 'LostVehicle'
     MDToolbar:
@@ -154,13 +392,62 @@ screen_helper = """
         MDLabel:
             text: 'Canvas for Karan ;-)'
             halign: 'center'
-<ShowINfoScreen>:
+<ShowInfoScreen>:
     name: 'InfoScreen'
-    MDLabel:
-        text: 'Info'
+    MDToolbar:
+        title: 'Vehicle Details'
+        pos_hint: {'top':1}
+        left_action_items: [["arrow-left-thick", lambda x: app.ShowManualEntryScreen()]]
+        right_action_items: [["share-variant", lambda x: app.show_bottom_sheet()]]
+        elevation:5
+    BoxLayout:
+        orientation: 'vertical'
+        FloatLayout:
+            Image:
+                source:'images.jpg'
+                size_hint: (0.7,0.9)
+                pos_hint: {'center_x':0.5, 'center_y':0.5}
+                allow_stretch: 'True'
+            MDLabel:
+                text: 'Suzuki Baleno'
+                halign: 'center'
+                pos_hint: {'center_y':0.15}
+                    
+            MDLabel:
+                text: '         Ownership Details:'
+                pos_hint: {'center_y':0.05}                
+        FloatLayout:
+            
+            ScrollView:        
+                MDList:
+                    TwoLineIconListItem:
+                        text: "Registration No."
+                        secondary_text: "PB65AG0087"
+                        IconLeftWidget:
+                            icon: "car-info"         
+        
+                    TwoLineIconListItem:
+                        text: "Owner Name"
+                        secondary_text: "ABC"
+                        IconLeftWidget:
+                            icon: "id-card" 
+        
+                    TwoLineIconListItem:
+                        text: "Contact Number"
+                        secondary_text: "8968184808"
+                        IconLeftWidget:
+                            icon: "cellphone-iphone" 
+    
+                    TwoLineIconListItem:
+                        text: "Vehicle Class"
+                        secondary_text: "Motor Car(LMV)"
+                        IconLeftWidget:
+                            icon: "car"
 NavigationLayout:
     ScreenManager:
         id: screen_manager
+        LoginScreen:
+        CreateAccountScreen:
         HomeScreen:
             nav_drawer: nav_drawer
         ProfileScreen:
@@ -211,6 +498,65 @@ NavigationLayout:
 """
 
 
+class WindowManager(ScreenManager):
+    pass
+
+
+sm = ScreenManager()
+sm1 = WindowManager()
+
+
+class LoginScreen(Screen):
+    email = ObjectProperty(None)
+    password = ObjectProperty(None)
+
+    def loginBtn(self):
+        if db.validate(self.email.text, self.password.text):
+            ProfileScreen.current = self.email.text
+            self.reset()
+            sm.current = "home"
+        else:
+            invalidLogin()
+
+    def createBtn(self):
+        self.reset()
+        sm1.current = "create"
+
+    def reset(self):
+        self.email.text = ""
+        self.password.text = ""
+
+
+class CreateAccountScreen(Screen):
+    namee = ObjectProperty(None)
+    email = ObjectProperty(None)
+    password = ObjectProperty(None)
+
+    def submit(self):
+        if self.namee.text != "" and self.email.text != "" and self.email.text.count(
+                "@") == 1 and self.email.text.count(".") > 0:
+            if self.password != "":
+                db.add_user(self.email.text, self.password.text, self.namee.text)
+
+                self.reset()
+
+                sm.current = "home"
+            else:
+                invalidForm()
+
+        else:
+            invalidForm()
+
+    def login(self):
+        self.reset()
+        sm.current = "home"
+
+    def reset(self):
+        self.email.text = ""
+        self.password.text = ""
+        self.namee.text = ""
+
+
 class HomeScreen(Screen):
     pass
 
@@ -248,8 +594,31 @@ class ContentNavigationDrawer(BoxLayout):
     nav_drawer = ObjectProperty()
 
 
-# Create the screen manager
+def invalidLogin():
+    pop = Popup(title='Invalid Login',
+                content=Label(text='Invalid username or password.'),
+                size_hint=(None, None), size=(220, 220))
+    pop.open()
+
+
+def invalidForm():
+    pop = Popup(title='Invalid Form',
+                content=(Label(text='Please fill in all inputs')),
+                size_hint=(None, None), size=(220, 200))
+
+    pop.open()
+
+
+db = DataBase("users.txt")
 sm = ScreenManager()
+sm1 = WindowManager()
+
+# Create the screen manager
+
+screens = [LoginScreen(name="login"), CreateAccountScreen(name="create"), HomeScreen(name='home')]
+for screen in screens:
+    sm1.add_widget(screen)
+
 sm.add_widget(HomeScreen(name='home'))
 sm.add_widget(ProfileScreen(name='profile'))
 sm.add_widget(RecentScreen(name='recent'))
@@ -264,7 +633,24 @@ class vParkApp(MDApp):
 
     def build(self):
         screen = Builder.load_string(screen_helper)
+        self.data_tables = MDDataTable(
+            size_hint=(0.9, 0.6),
+            # name column, width column
+            column_data=[
+                ("Particulars", dp(20)),
+                ("Days Left", dp(20))
+            ],
+            row_data=[
+                ("1. Insurance", ""),
+                ("2. Pollution", ""),
+                ("3. Service", ""),
+                ("4. Driving Licence", "")
+            ]
+        )
         return screen
+
+    def open_table(self):
+        self.data_tables.open()
 
     # Functions to change screens:
     def ShowProfile(self):
@@ -279,8 +665,35 @@ class vParkApp(MDApp):
     def ShowManualEntryScreen(self):
         self.root.ids.screen_manager.current = 'MEScreen'
 
-    def ShowInfo(self):
+    def ShowInfo(self, data):
         self.root.ids.screen_manager.current = 'InfoScreen'
+
+    def ShowCreateAccount(self):
+        self.root.ids.screen_manager.current = 'create'
+
+    def ShowLogin(self):
+        self.root.ids.screen_manager.current = 'login'
+
+    def callback_for_menu_items(self, *args):
+        toast(args[0])
+
+    def show_bottom_sheet(self):
+        self.bottom_sheet_menu = MDGridBottomSheet()
+        data = {
+            "Facebook": "facebook-box",
+            "WhatsApp": "whatsapp",
+            "Telegram": "telegram",
+            "Twitter": "twitter-box",
+            "Gmail": "gmail",
+            "Bluetooth": "bluetooth",
+        }
+        for item in data.items():
+            self.bottom_sheet_menu.add_item(
+                item[0],
+                lambda x, y=item[0]: self.callback_for_menu_items(y),
+                icon_src=item[1],
+            )
+        self.bottom_sheet_menu.open()
 
     # Function for OCR (bare for now, needs optimisations, work on it after successful apk build)
     def OCR(self):
