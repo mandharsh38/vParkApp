@@ -5,3 +5,7 @@
 .idea/modules.xml
 .idea/vcs.xml
 bin/vParkApp-0.3-armeabi-v7a-debug.apk
+__pycache__/database.cpython-37.pyc
+.DS_Store
+my.kv
+smtg.py
