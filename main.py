@@ -24,143 +24,7 @@ Window.size = (300, 500)
 
 # Builder string:
 screen_helper = """
-<LoginScreen>:
-    name: "login"
 
-    email: email
-    password: password
-
-    FloatLayout:
-        Label:
-            text: "Login"
-            font_size: 20
-            color: 0, 0, 0, 1
-            size_hint: 0.8, 0.2
-            pos_hint: {"x":0.1, "top":1}
-
-        Label:
-            text:"Email: "
-            color: 0, 0, 0, 1
-            font_size: (root.width**2 + root.height**2) / 13**4
-            pos_hint: {"x":0.1, "top":0.9}
-            size_hint: 0.35, 0.15
-
-        MDTextField:
-            id: email
-            pos_hint: {"x": 0.45 , "top":0.85}
-            size_hint: (0.7,1)
-
-        Label:
-            text:"Password: "
-            color: 0, 0, 0, 1
-            font_size: (root.width**2 + root.height**2) / 13**4
-            pos_hint: {"x":0.1, "top":0.7}
-            size_hint: 0.35, 0.15
-
-        TextInput:
-            id: password
-            font_size: (root.width**2 + root.height**2) / 13**4
-            multiline: False
-            password: True
-            pos_hint: {"x": 0.45, "top":0.65}
-            size_hint: 0.4, 0.05
-
-        Button:
-            pos_hint:{"x":0.35,"y":0.25}
-            size_hint: 0.3, 0.1
-            font_size: (root.width**2 + root.height**2) / 13**4
-            text: "Login"
-            on_release:
-                root.manager.transition.direction = "up"
-                root.manager.current = "home"
-                root.loginBtn()
-
-        Button:
-            pos_hint:{"x":0.15,"y":0.4}
-            size_hint: 0.7, 0.1
-            font_size: (root.width**2 + root.height**2) / 13**4
-            text: "Don't have an Account? Create One"
-            on_release:
-                root.manager.transition.direction = "right"
-                root.manager.current = "create"
-                root.createBtn()
-<CreateAccountScreen>:
-    name: "create"
-
-    namee: namee
-    email: email
-    password: passw
-
-    FloatLayout:
-        cols:1
-
-        FloatLayout:
-            size: root.width, root.height/2
-
-            Label:
-                text: "Create an Account"
-                color: 0, 0, 0, 1
-                size_hint: 0.8, 0.2
-                pos_hint: {"x":0.1, "top":1}
-    
-            Label:
-                size_hint: 0.5,0.12
-                color: 0, 0, 0, 1
-                pos_hint: {"x":0, "top":0.8}
-                text: "Name: "
-
-            TextInput:
-                pos_hint: {"x":0.5, "top":0.8}
-                size_hint: 0.45, 0.1
-                id: namee
-                multiline: False
-                font_size: 13
-
-            Label:
-                size_hint: 0.5,0.12
-                color: 0, 0, 0, 1
-                pos_hint: {"x":0, "top":0.8-0.13}
-                text: "Email: "
-
-            TextInput:
-                pos_hint: {"x":0.5, "top":0.8-0.13}
-                size_hint: 0.45, 0.1
-                id: email
-                multiline: False
-                font_size: 13
-
-            Label:
-                size_hint: 0.5,0.12
-                color: 0, 0, 0, 1
-                pos_hint: {"x":0, "top":0.8-0.13*2}
-                text: "Password: "
-
-            TextInput:
-                pos_hint: {"x":0.5, "top":0.8-0.13*2}
-                size_hint: 0.45, 0.1
-                id: passw
-                multiline: False
-                password: True
-                font_size: 13
-
-        Button:
-            pos_hint:{"x":0.1,"y":0.25}
-            size_hint: 0.8, 0.1
-            font_size: 15
-            text: "Already have an Account? Log In"
-            on_release:
-                root.manager.transition.direction = "left"
-                root.manager.current = "login"
-                root.login()
-
-        Button:
-            pos_hint:{"x":0.2,"y":0.05}
-            size_hint: 0.6, 0.15
-            text: "Submit"
-            on_release:
-                root.manager.transition.direction = "left"
-                root.manager.current = "login"
-                root.submit()
 <ContentNavigationDrawer>:
     orientation:'vertical'
     Image:
@@ -415,7 +279,7 @@ screen_helper = """
                     
             MDLabel:
                 text: '         Ownership Details:'
-                pos_hint: {'center_y':0.05}                
+                pos_hint: {'center_y':0.05}
         FloatLayout:
             
             ScrollView:        
@@ -446,7 +310,126 @@ screen_helper = """
 NavigationLayout:
     ScreenManager:
         id: screen_manager
-        LoginScreen:
+        Screen:
+            name: "login"
+
+            email: email
+            password: password
+            StackLayout:
+                orientation: "lr-tb"
+        
+                BoxLayout:
+                    orientation: "vertical"
+                    size_hint_y: .8
+                    spacing: 50
+                    
+                    MDLabel:
+                        text: 'Login'
+                        halign: 'center'
+        
+                    MDTextField:
+                        id: email
+                        icon_type: "left"
+                        size_hint: .5, None
+                        pos_hint: {"center_x": .5}
+                        hint_text: "Email"
+                        helper_text: "someone@example.com" 
+                        helper_text_mode: "on_focus"
+        
+                    MDTextField:
+                        id: password
+                        password: True
+                        icon_type: "left"
+                        icon_left: "lock"
+                        size_hint: .5, None
+                        pos_hint: {"center_x": .5}
+                        hint_text: "Password"
+                        helper_text: "Password is CASE Sensitive" 
+                        helper_text_mode: "on_focus"
+                    MDTextButton:
+                        text: "Don't have an Account? Create One"
+                        pos_hint: {'center_x':0.5}
+                        on_release:
+                            app.ShowCreate()
+                            app.createBtn()
+                    MDFillRoundFlatButton:
+                        text: "Login"
+                        pos_hint: {'center_x':0.5}
+                        on_release:
+                            app.loginBtn()
+        Screen:
+            name: "create"
+            name1: name1
+            email1: email1
+            password1: password1
+        
+            FloatLayout:
+                cols:1
+        
+                FloatLayout:
+                    size: root.width, root.height/2
+        
+                    Label:
+                        text: "Create an Account"
+                        color: 0, 0, 0, 1
+                        size_hint: 0.8, 0.2
+                        pos_hint: {"x":0.1, "top":1}
+            
+                    Label:
+                        size_hint: 0.5,0.12
+                        color: 0, 0, 0, 1
+                        pos_hint: {"x":0, "top":0.8}
+                        text: "Name: "
+        
+                    TextInput:
+                        pos_hint: {"x":0.5, "top":0.8}
+                        size_hint: 0.45, 0.1
+                        id: name1
+                        multiline: False
+                        font_size: 13
+        
+                    Label:
+                        size_hint: 0.5,0.12
+                        color: 0, 0, 0, 1
+                        pos_hint: {"x":0, "top":0.8-0.13}
+                        text: "Email: "
+        
+                    TextInput:
+                        pos_hint: {"x":0.5, "top":0.8-0.13}
+                        size_hint: 0.45, 0.1
+                        id: email1
+                        multiline: False
+                        font_size: 13
+        
+                    Label:
+                        size_hint: 0.5,0.12
+                        color: 0, 0, 0, 1
+                        pos_hint: {"x":0, "top":0.8-0.13*2}
+                        text: "Password: "
+        
+                    TextInput:
+                        pos_hint: {"x":0.5, "top":0.8-0.13*2}
+                        size_hint: 0.45, 0.1
+                        id: password1
+                        multiline: False
+                        password: True
+                        font_size: 13
+        
+                Button:
+                    pos_hint:{"x":0.1,"y":0.25}
+                    size_hint: 0.8, 0.1
+                    font_size: 15
+                    text: "Already have an Account? Log In"
+                    on_release:
+                        app.ShowLogin()
+        
+                Button:
+                    pos_hint:{"x":0.2,"y":0.05}
+                    size_hint: 0.6, 0.15
+                    text: "Submit"
+                    on_release:
+                        app.ShowLogin()
+                        app.submit()
         CreateAccountScreen:
         HomeScreen:
             nav_drawer: nav_drawer
@@ -506,50 +489,7 @@ sm = ScreenManager()
 sm1 = WindowManager()
 
 
-class LoginScreen(Screen):
-    email = ObjectProperty(None)
-    password = ObjectProperty(None)
-
-    def loginBtn(self):
-        if db.validate(self.email.text, self.password.text):
-            ProfileScreen.current = self.email.text
-            self.reset()
-            sm.current = "home"
-        else:
-            invalidLogin()
-
-    def createBtn(self):
-        self.reset()
-        sm1.current = "create"
-
-    def reset(self):
-        self.email.text = ""
-        self.password.text = ""
-
-
 class CreateAccountScreen(Screen):
-    namee = ObjectProperty(None)
-    email = ObjectProperty(None)
-    password = ObjectProperty(None)
-
-    def submit(self):
-        if self.namee.text != "" and self.email.text != "" and self.email.text.count(
-                "@") == 1 and self.email.text.count(".") > 0:
-            if self.password != "":
-                db.add_user(self.email.text, self.password.text, self.namee.text)
-
-                self.reset()
-
-                sm.current = "home"
-            else:
-                invalidForm()
-
-        else:
-            invalidForm()
-
-    def login(self):
-        self.reset()
-        sm.current = "home"
 
     def reset(self):
         self.email.text = ""
@@ -594,30 +534,8 @@ class ContentNavigationDrawer(BoxLayout):
     nav_drawer = ObjectProperty()
 
 
-def invalidLogin():
-    pop = Popup(title='Invalid Login',
-                content=Label(text='Invalid username or password.'),
-                size_hint=(None, None), size=(220, 220))
-    pop.open()
-
-
-def invalidForm():
-    pop = Popup(title='Invalid Form',
-                content=(Label(text='Please fill in all inputs')),
-                size_hint=(None, None), size=(220, 200))
-
-    pop.open()
-
-
-db = DataBase("users.txt")
-sm = ScreenManager()
-sm1 = WindowManager()
-
 # Create the screen manager
-
-screens = [LoginScreen(name="login"), CreateAccountScreen(name="create"), HomeScreen(name='home')]
-for screen in screens:
-    sm1.add_widget(screen)
+sm = ScreenManager()
 
 sm.add_widget(HomeScreen(name='home'))
 sm.add_widget(ProfileScreen(name='profile'))
@@ -626,6 +544,7 @@ sm.add_widget(HelpScreen(name='help'))
 sm.add_widget(ManualEntryScreen(name='MEScreen'))
 sm.add_widget(ManualEntryScreen(name='LostVehicle'))
 sm.add_widget(ShowInfoScreen(name='InfoScreen'))
+sm.add_widget(CreateAccountScreen(name="create"))
 
 
 # Main function:
@@ -674,6 +593,9 @@ class vParkApp(MDApp):
     def ShowLogin(self):
         self.root.ids.screen_manager.current = 'login'
 
+    def ShowCreate(self):
+        self.root.ids.screen_manager.current = 'create'
+
     def callback_for_menu_items(self, *args):
         toast(args[0])
 
@@ -707,10 +629,62 @@ class vParkApp(MDApp):
         data = pytesseract.image_to_string(img)
         # Create a dialog to show the 'data' on screen and open the dialog
         self.ShowInfo(data)
+        print(data)
 
     # Manual entry function:
     def ManualEntry(self):
         pass
+
+    db = DataBase("users.txt")
+    email = ObjectProperty(None)
+    password = ObjectProperty(None)
+
+    def loginBtn(self):
+        if self.db.validate(self.root.ids.email.text, self.root.ids.password.text):
+            self.reset()
+            self.root.ids.screen_manager.current = 'home'
+        else:
+            self.invalidLogin()
+
+    def createBtn(self):
+        self.reset()
+        self.root.ids.screen_manager.current = "create"
+
+    def reset(self):
+        self.root.ids.email.text = ""
+        self.root.ids.password.text = ""
+
+    def invalidLogin(self):
+        pop = Popup(title='Invalid Login',
+                    content=Label(text='Invalid username or password.'),
+                    size_hint=(.5, .3))
+        pop.open()
+
+    def invalidForm(self):
+        pop = Popup(title='Invalid Form',
+                    content=(Label(text='Please fill in all inputs')),
+                    size_hint=(.8, .3))
+
+        pop.open()
+
+    name1 = ObjectProperty(None)
+    email1 = ObjectProperty(None)
+    password1 = ObjectProperty(None)
+
+    def submit(self):
+        if self.root.ids.name1.text != "" and self.root.ids.email1.text != "" and self.root.ids.email1.text.count(
+                "@") == 1 and self.root.ids.email1.text.count(".") > 0:
+            if self.root.ids.password1 != "":
+                self.db.add_user(self.root.ids.email1.text, self.root.ids.password1.text, self.root.ids.name1.text)
+
+                self.reset()
+
+                self.root.ids.screen_manager.current = "home"
+            else:
+                self.invalidForm()
+
+        else:
+            self.invalidForm()
 
 
 vParkApp().run()
