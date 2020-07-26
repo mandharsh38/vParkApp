@@ -329,8 +329,7 @@ NavigationLayout:
         
                     MDTextField:
                         id: email
-                        icon_type: "left"
-                        size_hint: .5, None
+                        size_hint: .7, None
                         pos_hint: {"center_x": .5}
                         hint_text: "Email"
                         helper_text: "someone@example.com" 
@@ -339,9 +338,7 @@ NavigationLayout:
                     MDTextField:
                         id: password
                         password: True
-                        icon_type: "left"
-                        icon_left: "lock"
-                        size_hint: .5, None
+                        size_hint: .7, None
                         pos_hint: {"center_x": .5}
                         hint_text: "Password"
                         helper_text: "Password is CASE Sensitive" 
@@ -362,74 +359,55 @@ NavigationLayout:
             name1: name1
             email1: email1
             password1: password1
-        
-            FloatLayout:
-                cols:1
-        
-                FloatLayout:
-                    size: root.width, root.height/2
-        
-                    Label:
-                        text: "Create an Account"
-                        color: 0, 0, 0, 1
-                        size_hint: 0.8, 0.2
-                        pos_hint: {"x":0.1, "top":1}
+            StackLayout:
+                orientation: "lr-tb"
+    
+                BoxLayout:
+                    orientation: "vertical"
+                    size_hint_y: .9
+                    spacing: 50
+                
+                    MDLabel:
+                        text: 'Create Account'
+                        halign: 'center'
             
-                    Label:
-                        size_hint: 0.5,0.12
-                        color: 0, 0, 0, 1
-                        pos_hint: {"x":0, "top":0.8}
-                        text: "Name: "
-        
-                    TextInput:
-                        pos_hint: {"x":0.5, "top":0.8}
-                        size_hint: 0.45, 0.1
+                    MDTextField:
                         id: name1
-                        multiline: False
-                        font_size: 13
+                        size_hint: .7, None
+                        pos_hint: {"center_x": .5}
+                        hint_text: "Name"
+                        helper_text: "Enter your full name"
+                        helper_text_mode: "on_focus"
         
-                    Label:
-                        size_hint: 0.5,0.12
-                        color: 0, 0, 0, 1
-                        pos_hint: {"x":0, "top":0.8-0.13}
-                        text: "Email: "
-        
-                    TextInput:
-                        pos_hint: {"x":0.5, "top":0.8-0.13}
-                        size_hint: 0.45, 0.1
+                    MDTextField:
                         id: email1
-                        multiline: False
-                        font_size: 13
+                        size_hint: .7, None
+                        pos_hint: {"center_x": .5}
+                        hint_text: "Email"
+                        helper_text: "someone@example.com" 
+                        helper_text_mode: "on_focus"
         
-                    Label:
-                        size_hint: 0.5,0.12
-                        color: 0, 0, 0, 1
-                        pos_hint: {"x":0, "top":0.8-0.13*2}
-                        text: "Password: "
-        
-                    TextInput:
-                        pos_hint: {"x":0.5, "top":0.8-0.13*2}
-                        size_hint: 0.45, 0.1
+                    MDTextField:
                         id: password1
-                        multiline: False
                         password: True
-                        font_size: 13
+                        size_hint: .7, None
+                        pos_hint: {"center_x": .5}
+                        hint_text: "Password"
+                        helper_text: "Password is CASE Sensitive" 
+                        helper_text_mode: "on_focus"
         
-                Button:
-                    pos_hint:{"x":0.1,"y":0.25}
-                    size_hint: 0.8, 0.1
-                    font_size: 15
-                    text: "Already have an Account? Log In"
-                    on_release:
-                        app.ShowLogin()
-        
-                Button:
-                    pos_hint:{"x":0.2,"y":0.05}
-                    size_hint: 0.6, 0.15
-                    text: "Submit"
-                    on_release:
-                        app.ShowLogin()
-                        app.submit()
+                    MDTextButton:
+                        text: "Already have an Account? Log In"
+                        pos_hint: {'center_x':0.5}
+                        on_release:
+                            app.ShowLogin()
+            
+                    MDFillRoundFlatButton:
+                        text: "Submit"
+                        pos_hint: {'center_x':0.5}
+                        on_release:
+                            app.ShowLogin()
+                            app.submit()
         CreateAccountScreen:
         HomeScreen:
             nav_drawer: nav_drawer
