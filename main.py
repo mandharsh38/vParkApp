@@ -8,11 +8,13 @@ from PIL import Image
 from kivymd.uix.datatables import MDDataTable
 from kivy.metrics import dp
 from kivy.core.window import Window
-from kivy.uix.popup import Popup
-from kivy.uix.label import Label
 from database import DataBase
 from kivymd.toast import toast
 from kivymd.uix.bottomsheet import MDGridBottomSheet
+from kivymd.uix.dialog import MDDialog
+from kivymd.uix.floatlayout import FloatLayout
+from kivymd.uix.button import MDFlatButton
+from kivymd.uix.button import MDRaisedButton
 
 Window.size = (300, 500)
 
@@ -24,7 +26,6 @@ Window.size = (300, 500)
 
 # Builder string:
 screen_helper = """
-
 <ContentNavigationDrawer>:
     orientation:'vertical'
     Image:
@@ -76,7 +77,7 @@ screen_helper = """
             on_release: app.open_table()
     FloatLayout:
         Camera:
-            resolution: (120,60)
+            resolution: (100,120)
             play: 'True'
             allow_stretch: 'True'
         MDRaisedButton:
@@ -243,19 +244,6 @@ screen_helper = """
                 text: 'Done'
                 on_release:
                     root.manager.current = "InfoScreen"
-<LostVehicleScreen>:
-    name: 'LostVehicle'
-    MDToolbar:
-        pos_hint: {"top": 1}
-        elevation: 10
-        title: "Lost Vehicle"
-        left_action_items: [["menu", lambda x: root.nav_drawer.set_state("open")]]
-        right_action_items: [['home', lambda x: app.ShowHome()]]
-    BoxLayout:
-        orientation: 'vertical'
-        MDLabel:
-            text: 'Canvas for Karan ;-)'
-            halign: 'center'
 <ShowInfoScreen>:
     name: 'InfoScreen'
     MDToolbar:
@@ -406,9 +394,7 @@ NavigationLayout:
                         text: "Submit"
                         pos_hint: {'center_x':0.5}
                         on_release:
-                            app.ShowLogin()
                             app.submit()
-        CreateAccountScreen:
         HomeScreen:
             nav_drawer: nav_drawer
         ProfileScreen:
@@ -419,11 +405,58 @@ NavigationLayout:
             nav_drawer: nav_drawer
         SettingsScreen:
             nav_drawer: nav_drawer
-        LostVehicleScreen:
-            nav_drawer: nav_drawer
+        Screen:
+            name: 'LostVehicle'
+            MDToolbar:
+                pos_hint: {'top': 1}
+                elevation: 10
+                title: "Lost Vehicle"
+                left_action_items: [["menu", lambda x: root.ids.nav_drawer.set_state("open")]]
+                right_action_items: [['home', lambda x: app.ShowHome()]]
+            BoxLayout:
+                pos_hint:{'top': 0.87}
+                orientation: 'vertical'
+                ScrollView:
+                    MDList:
+                        ThreeLineAvatarListItem:
+                            bg_color: (0.043, 0.675, 0.62,0.25)
+                            text: 'Number'
+                            secondary_text: 'Model'
+                            tertiary_text: 'Location, Time'
+                            IconLeftWidget:
+                                icon: "logo.jpg"
+                        ThreeLineAvatarListItem:
+                            bg_color: (0.043, 0.675, 0.62,0.25)
+                            text: 'Number'
+                            secondary_text: 'Model'
+                            tertiary_text: 'Location, Time'
+                            IconLeftWidget:
+                                icon: "logo.jpg"
+                        ThreeLineAvatarListItem:
+                            bg_color: (0.043, 0.675, 0.62,0.25)
+                            text: 'Number'
+                            secondary_text: 'Model'
+                            tertiary_text: 'Location, Time'
+                            IconLeftWidget:
+                                icon: "logo.jpg"
+                        ThreeLineAvatarListItem:
+                            bg_color: (0.043, 0.675, 0.62,0.25)
+                            text: 'Number'
+                            secondary_text: 'Model'
+                            tertiary_text: 'Location, Time'
+                            IconLeftWidget:
+                                icon: "logo.jpg"
+                        ThreeLineAvatarListItem:
+                            bg_color: (0.043, 0.675, 0.62,0.25)
+                            text: 'Number'
+                            secondary_text: 'Model'
+                            tertiary_text: 'Location, Time'
+                            IconLeftWidget:
+                                icon: "logo.jpg"
+                        
+
         ManualEntryScreen:
         ShowInfoScreen:
-            
         Screen:
             name: 'camera'
             FloatLayout:
@@ -459,22 +492,6 @@ NavigationLayout:
 """
 
 
-class WindowManager(ScreenManager):
-    pass
-
-
-sm = ScreenManager()
-sm1 = WindowManager()
-
-
-class CreateAccountScreen(Screen):
-
-    def reset(self):
-        self.email.text = ""
-        self.password.text = ""
-        self.namee.text = ""
-
-
 class HomeScreen(Screen):
     pass
 
@@ -499,10 +516,6 @@ class ManualEntryScreen(Screen):
     pass
 
 
-class LostVehicleScreen(Screen):
-    pass
-
-
 class ShowInfoScreen(Screen):
     pass
 
@@ -520,9 +533,7 @@ sm.add_widget(ProfileScreen(name='profile'))
 sm.add_widget(RecentScreen(name='recent'))
 sm.add_widget(HelpScreen(name='help'))
 sm.add_widget(ManualEntryScreen(name='MEScreen'))
-sm.add_widget(ManualEntryScreen(name='LostVehicle'))
 sm.add_widget(ShowInfoScreen(name='InfoScreen'))
-sm.add_widget(CreateAccountScreen(name="create"))
 
 
 # Main function:
@@ -633,17 +644,15 @@ class vParkApp(MDApp):
         self.root.ids.password.text = ""
 
     def invalidLogin(self):
-        pop = Popup(title='Invalid Login',
-                    content=Label(text='Invalid username or password.'),
-                    size_hint=(.5, .3))
-        pop.open()
+        self.pop = MDDialog(text='Invalid username or password.',
+                            size_hint=(.5, .3))
+        self.pop.open()
 
     def invalidForm(self):
-        pop = Popup(title='Invalid Form',
-                    content=(Label(text='Please fill in all inputs')),
-                    size_hint=(.8, .3))
+        self.pop = MDDialog(text='Please fill in all inputs',
+                            size_hint=(.8, .3))
 
-        pop.open()
+        self.pop.open()
 
     name1 = ObjectProperty(None)
     email1 = ObjectProperty(None)
@@ -663,6 +672,20 @@ class vParkApp(MDApp):
 
         else:
             self.invalidForm()
+
+    def dialog_lost(self):
+        dialog = MDDialog(type="custom", size_hint=(0.6, 0.8),
+                          buttons=[
+                              MDFlatButton(text='Close',
+                                           on_release=self.dialog.dismiss()),
+                              MDRaisedButton(
+                                  text='Submit',
+                                  pos_hint={"x": 0.1, "y": 0.05},
+                                  size_hint=(0.8, 0.3)
+
+                              )])
+
+        self.dialog.open()
 
 
 vParkApp().run()
