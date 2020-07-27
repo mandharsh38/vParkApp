@@ -12,7 +12,6 @@ from database import DataBase
 from kivymd.toast import toast
 from kivymd.uix.bottomsheet import MDGridBottomSheet
 from kivymd.uix.dialog import MDDialog
-from kivymd.uix.floatlayout import FloatLayout
 from kivymd.uix.button import MDFlatButton
 from kivymd.uix.button import MDRaisedButton
 
@@ -419,40 +418,50 @@ NavigationLayout:
                 ScrollView:
                     MDList:
                         ThreeLineAvatarListItem:
+                            on_release: 
+                                app.lost_vehicle()
                             bg_color: (0.043, 0.675, 0.62,0.25)
                             text: 'Number'
                             secondary_text: 'Model'
                             tertiary_text: 'Location, Time'
-                            IconLeftWidget:
-                                icon: "logo.jpg"
+                            ImageLeftWidget:
+                                source: "logo.jpg"
                         ThreeLineAvatarListItem:
+                            on_release: 
+                                app.lost_vehicle()
                             bg_color: (0.043, 0.675, 0.62,0.25)
                             text: 'Number'
                             secondary_text: 'Model'
                             tertiary_text: 'Location, Time'
-                            IconLeftWidget:
-                                icon: "logo.jpg"
+                            ImageLeftWidget:
+                                source: "logo.jpg"
                         ThreeLineAvatarListItem:
+                            on_release: 
+                                app.lost_vehicle()
                             bg_color: (0.043, 0.675, 0.62,0.25)
                             text: 'Number'
                             secondary_text: 'Model'
                             tertiary_text: 'Location, Time'
-                            IconLeftWidget:
-                                icon: "logo.jpg"
+                            ImageLeftWidget:
+                                source: "logo.jpg"
                         ThreeLineAvatarListItem:
+                            on_release: 
+                                app.lost_vehicle()
                             bg_color: (0.043, 0.675, 0.62,0.25)
                             text: 'Number'
                             secondary_text: 'Model'
                             tertiary_text: 'Location, Time'
-                            IconLeftWidget:
-                                icon: "logo.jpg"
+                            ImageLeftWidget:
+                                source: "logo.jpg"
                         ThreeLineAvatarListItem:
+                            on_release: 
+                                app.lost_vehicle()
                             bg_color: (0.043, 0.675, 0.62,0.25)
                             text: 'Number'
                             secondary_text: 'Model'
                             tertiary_text: 'Location, Time'
-                            IconLeftWidget:
-                                icon: "logo.jpg"
+                            ImageLeftWidget:
+                                source: "logo.jpg"
                         
 
         ManualEntryScreen:
@@ -538,7 +547,6 @@ sm.add_widget(ShowInfoScreen(name='InfoScreen'))
 
 # Main function:
 class vParkApp(MDApp):
-
     def build(self):
         screen = Builder.load_string(screen_helper)
         self.data_tables = MDDataTable(
@@ -673,19 +681,8 @@ class vParkApp(MDApp):
         else:
             self.invalidForm()
 
-    def dialog_lost(self):
-        dialog = MDDialog(type="custom", size_hint=(0.6, 0.8),
-                          buttons=[
-                              MDFlatButton(text='Close',
-                                           on_release=self.dialog.dismiss()),
-                              MDRaisedButton(
-                                  text='Submit',
-                                  pos_hint={"x": 0.1, "y": 0.05},
-                                  size_hint=(0.8, 0.3)
-
-                              )])
-
-        self.dialog.open()
+    def lost_vehicle(self):
+        pass
 
 
 vParkApp().run()
