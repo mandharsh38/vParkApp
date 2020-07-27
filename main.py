@@ -12,8 +12,6 @@ from database import DataBase
 from kivymd.toast import toast
 from kivymd.uix.bottomsheet import MDGridBottomSheet
 from kivymd.uix.dialog import MDDialog
-from kivymd.uix.button import MDFlatButton
-from kivymd.uix.button import MDRaisedButton
 
 Window.size = (300, 500)
 
