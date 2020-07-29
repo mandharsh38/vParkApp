@@ -1,6 +1,6 @@
 import datetime
-from kivy.uix.popup import Popup
 from kivy.uix.label import Label
+
 
 class DataBase:
     def __init__(self, filename):
@@ -33,11 +33,10 @@ class DataBase:
         else:
             self.invalidSubmit()
 
-
     def invalidSubmit(self):
-        pop = Popup(title='Invalid Login',
+        pop = Label(title='Invalid Login',
                     content=Label(text='Email already exists'),
-                    size_hint=(None, None), size=(220, 220))
+                    size_hint=(0.7, 0.3))
         pop.open()
 
     def validate(self, email, password):
@@ -54,4 +53,3 @@ class DataBase:
     @staticmethod
     def get_date():
         return str(datetime.datetime.now()).split(" ")[0]
-
